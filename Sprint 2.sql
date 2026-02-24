@@ -1,8 +1,20 @@
 USE transactions;
 
-# Prueba
-SELECT *
-FROM transactions.company;
+# Comprobaciones previas
+SELECT COUNT(*)
+FROM transactions.company
+WHERE id IS NULL;
+
+SELECT COUNT(*)
+FROM transactions.transaction
+WHERE id IS NULL;
+
+SELECT COUNT(DISTINCT company_id)
+FROM transaction;
+
+
+SELECT COUNT(DISTINCT id)
+FROM company;
 
 #NIVEL 1
 
@@ -11,7 +23,7 @@ FROM transactions.company;
 SELECT DISTINCT c.country
 FROM company c
 JOIN transaction t
-ON c.id=t.company_id;
+ON c.id = t.company_id;
 
 # Desde cuántos países se generan ventas
 SELECT COUNT(DISTINCT c.country) AS total_paises
@@ -92,8 +104,9 @@ ON t.company_id = c.id
 WHERE c.country = (
 	SELECT country
     FROM company
-    WHERE company_name = 'Non Institute'
-);
+    WHERE company_name = 'Non Institute')
+AND company_name != 'Non Institute'
+AND t.declined = 0;
 
 # - Muestra el listado aplicando sólo subconsultas
 SELECT *
@@ -101,12 +114,13 @@ FROM transaction
 WHERE company_id IN (
 	SELECT id
     FROM company
-    WHERE country = (
+    WHERE company_name != 'Non Institute'
+    AND country = (
 		SELECT country
         FROM company
         WHERE company_name = 'Non Institute'
 	)
-);
+); # falta declined!!!!!!!!!!
 
 # NIVEL 3
 
@@ -121,6 +135,8 @@ WHERE
 	t.amount BETWEEN 350 AND 400 
     AND DATE(t.timestamp) IN ('2015-04-29','2018-07-20','2024-03-13')
 ORDER BY t.amount DESC;
+
+# FALTA DECLINED!!!!!!!!
 
 # EJERCICIO 2: Necesitamos optimizar la asignación de los recursos y dependerá de la capacidad operativa que se requiera, por lo cual 
 # te piden información sobre la cantidad de transacciones que realizan las empresas, pero el departamento de recursos humanos es exigente y 
