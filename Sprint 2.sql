@@ -29,13 +29,14 @@ ON c.id = t.company_id;
 SELECT COUNT(DISTINCT c.country) AS total_paises
 FROM company c
 JOIN transaction t
-ON c.id=t.company_id;
+ON c.id = t.company_id;
 
 # Identifica la empresa con la media más grande de ventas
-SELECT c.company_name, AVG(t.amount) AS media_ventas
+SELECT c.company_name, ROUND(AVG(t.amount),2) AS media_ventas
 FROM company c
 JOIN transaction t
-ON c.id=t.company_id
+ON c.id = t.company_id
+WHERE t.declined = 0
 GROUP BY c.company_name
 ORDER BY media_ventas DESC
 LIMIT 1;
