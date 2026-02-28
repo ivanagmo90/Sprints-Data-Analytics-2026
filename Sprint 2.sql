@@ -157,7 +157,16 @@ ORDER BY t.amount DESC;
 # te piden información sobre la cantidad de transacciones que realizan las empresas, pero el departamento de recursos humanos es exigente y 
 # quiere un listado de las empresas donde especifiques si tienen más de 400 transacciones o menos.
 
-# SIN RESPUESTA
+SELECT	c.company_name, COUNT(t.id) AS total_transacciones,
+		CASE
+			WHEN COUNT(t.id) > 400 THEN 'Más de 400'
+            ELSE '400 o menos'
+		END AS categoria
+FROM company c
+LEFT JOIN transaction t
+	ON t.company_id = c.id
+    AND t.declined = 0
+GROUP BY c.company_name;
 
 
 
